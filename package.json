@@ -1,0 +1,66 @@
+{
+  "name": "workbot",
+  "version": "0.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "rm -rf dist && tsc",
+    "lint": "tslint --config tslint.json --project . --format stylish",
+    "test": "export RNG=`node -e 'console.log(Math.random())'` && echo $RNG && jest tests/unit",
+    "test:all": "export RNG=`node -e 'console.log(Math.random())'` && echo $RNG && jest",
+    "file": "NODE_PATH=src ts-node",
+    "tsc": "tsc",
+    "start": "npm run -s build; NODE_PATH=dist/src node --max-old-space-size=8192 dist/scripts/test.js",
+    "watch": "tsc --watch"
+  },
+  "author": "Andy Patterson",
+  "license": "MIT",
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "globals": {
+      "__TEST__": true
+    },
+    "testMatch": [
+      "**/tests/**/*.test.ts?(x)"
+    ],
+    "moduleDirectories": [
+      "node_modules",
+      "./src"
+    ],
+    "moduleFileExtensions": [
+      "js",
+      "ts"
+    ],
+    "testEnvironment": "node",
+    "setupFiles": []
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "npm run -s lint"
+    }
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.0",
+    "husky": "^2.0.0",
+    "jest": "^24.0.0",
+    "ts-jest": "^24.0.0",
+    "ts-node": "^8.0.3",
+    "tslint": "^5.9.1",
+    "typescript": "~3.5.0"
+  },
+  "dependencies": {
+    "@types/lodash": "^4.14.108",
+    "@types/node": "^12.0.0",
+    "@types/node-fetch": "^2.3.7",
+    "@types/uuid": "^3.4.5",
+    "lodash": "^4.17.10",
+    "node-fetch": "^2.6.0",
+    "simplytyped": "^3.0.0",
+    "utilities-ts": "git+https://github.com/andnp/utilities-ts.git",
+    "uuid": "^3.3.2",
+    "validtyped": "^2.2.0"
+  }
+}
