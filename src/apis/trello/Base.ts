@@ -1,5 +1,11 @@
 import * as v from 'validtyped';
 import * as remote from '../../utils/request';
+import { time } from 'utilities-ts';
+import { cache } from '../../utils/cache';
+
+// build one global cached getter
+// so all trello `get` calls are cached in one spot
+const cachedGet = cache(time.seconds(30), remote.get);
 
 export abstract class TrelloBase {
     protected readonly base = 'https://api.trello.com/1';
@@ -17,11 +23,11 @@ export abstract class TrelloBase {
     }
 
     protected get<T>(url: string, validator: v.Validator<T>) {
-        return remote.get(this.authenticate(`${this.base}/${url}`), validator);
+        return cachedGet(this.authenticate(`${this.base}/${url}`), validator);
     }
 
-    protected async post(url: string) {
-        const ret = await remote.post(this.authenticate(`${this.base}/${url}`), v.any());
+    protected async post(url: string, data?: {}) {
+        const ret = await remote.post(this.authenticate(`${this.base}/${url}`), data, v.any());
 
         if (typeof ret === 'string') throw new Error(ret);
         return ret;

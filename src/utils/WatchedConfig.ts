@@ -11,6 +11,7 @@ export class WatchedConfig<T> {
     data: T | undefined;
 
     private callbacks: Array<WatcherCallback<T>> = [];
+    private loaded = false;
 
     constructor(
         private readonly path: string,
@@ -27,11 +28,16 @@ export class WatchedConfig<T> {
         if (_.isEqual(this.data, data)) return;
 
         this.data = data;
+        this.loaded = true;
         this.callbacks.forEach(f => f(data));
     }
 
     onUpdate(f: WatcherCallback<T>) {
         this.callbacks.push(f);
+
+        if (this.loaded) {
+            f(this.data);
+        }
     }
 
     async blockUntilLoaded() {

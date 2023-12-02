@@ -1,18 +1,12 @@
 import { TrelloApi } from '../apis/trello';
-import { buildScheduler } from '../utils/schedule';
-import { propEquals } from '../utils/fp';
-
-function findByName<T extends Record<'name', string>>(arr: T[], name: string): T {
-    const item = arr.find(propEquals({ name }));
-    if (!item) throw new Error('Expected to find item with name: ' + name);
-
-    return item;
-}
+import { buildScheduler, DAYS } from '../utils/schedule';
+import { findByName } from '../utils/array';
 
 export async function start(trello: TrelloApi) {
     const schedule = buildScheduler({
         repeat: true,
         time: "23:30",
+        except: [DAYS.saturday, DAYS.sunday],
     });
 
     async function runner() {

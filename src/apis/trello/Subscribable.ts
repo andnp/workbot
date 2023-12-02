@@ -68,9 +68,27 @@ const updateCardActionSchema = v.object({
     }),
 });
 
+const moveCardActionSchema = v.object({
+    model: v.object({
+        id: v.string(),
+    }),
+    action: v.object({
+        id: v.string(),
+        type: v.string(['updateCard' as const]),
+        date: v.string(),
+        data: v.object({
+            card: simpleEntitySchema,
+            listBefore: simpleEntitySchema,
+            listAfter: simpleEntitySchema,
+            board: simpleEntitySchema,
+        }),
+    }),
+});
+
 const actionSchema = v.union([
     createCardActionSchema,
     updateCardActionSchema,
+    moveCardActionSchema,
 ]);
 
 type ActionData = v.ValidType<typeof actionSchema>;

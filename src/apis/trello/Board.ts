@@ -2,6 +2,7 @@ import * as v from 'validtyped';
 import { propEquals, map } from '../../utils/fp';
 import { TrelloSubscribable } from './Subscribable';
 import { TrelloListApi, listSchema } from './List';
+import { labelSchema, TrelloLabelApi, TrelloColor } from './Label';
 
 export const boardSchema = v.object({
     name: v.string(),
@@ -40,5 +41,32 @@ export class TrelloBoardApi extends TrelloSubscribable {
         if (!list) throw new Error('Did not find list with given name');
 
         return list;
+    }
+
+    getLabels() {
+        return this.get(`boards/${this.id}/labels`, v.array(labelSchema))
+            .then(map(label => new TrelloLabelApi(
+                this.apikey,
+                this.token,
+                label.id,
+                label.name,
+            )));
+    }
+
+    async getLabelByName(name: string) {
+        const labels = await this.getLabels();
+        const label = labels.find(propEquals({ name }));
+
+        if (!label) throw new Error('Did not find label with given name');
+
+        return label;
+    }
+
+    createLabel(name: string, color: TrelloColor) {
+        return this.post(`labels`, {
+            name,
+            color,
+            idBoard: this.id,
+        });
     }
 }

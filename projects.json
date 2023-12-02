@@ -1,0 +1,13 @@
+[
+    { "name": "isr_placement" },
+    { "name": "off-policy-acceleration" },
+    { "name": "ai4good" },
+    { "name": "brains" },
+    { "name": "coursera" },
+    { "name": "gvfn" },
+    { "name": "bayes-exploration" },
+    { "name": "misc" },
+    { "name": "online-off-policy-prediction" },
+    { "name": "oos" },
+    { "name": "organization" }
+]
